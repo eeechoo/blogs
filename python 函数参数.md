@@ -73,8 +73,22 @@ foo(a=1, b=2, c=3, d=4)
 关键字参数调用时必须指定参数名，在上面的例子中就是必须使用 `a=1, b=2`，参数名不可缺省。
 
 ## 1.2. 参考资料
-廖雪峰 Python 函数篇
+廖雪峰 Python 函数篇  
 Fluent Python 函数篇
+
+## 踩过的坑
+默认参数的坑，代码如下
+```python
+def do_something(val, visited=set()):
+    visited.add(val) # 注意这个操作 return None
+    return visited
+
+
+a = do_something(1)
+b = do_something(2)
+b = do_something() # b: {1}
+```
+对比如下代码
 
 ## 1.3. Python 2.7 vs. Python 3.7
 

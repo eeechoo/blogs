@@ -121,13 +121,16 @@ class Solution:
         if not node:
             return None
 
-
+        # 完成 图中 顶点 的复制
         xnode_to_ynode = {}
         def fillmap(cnode, xymap):
             xymap[cnode] = Node(cnode.val)
         self._dfs(node, fillmap, xymap=xnode_to_ynode)
 
+            
         print("next\n\n\n")
+        
+        #完成 图中 边 的复制
         def fillneighs(cnode, xymap):
             for i in cnode.neighbors:
                 xymap[cnode].neighbors.append(xymap[i])
@@ -135,6 +138,10 @@ class Solution:
 
         return xnode_to_ynode[node]
 ```
+
+## 更多知识
+奇怪的知识又增加了 (〃'▽'〃)
+
 
 ## 1.3. Python 2.7 vs. Python 3.7
 

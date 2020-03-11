@@ -88,7 +88,53 @@ a = do_something(1)
 b = do_something(2)
 a is b # True
 ```
-以为使用默认参数，调用 do_something 会每次创建一个 新的 set 对象，其实并没有！！！！
+以为使用默认参数，调用 do_something 会每次创建一个 新的 set 对象，其实并没有！！！！  
+所以重要的话就是：  
+不要使用 mutable 对象作为函数的默认参数！！！
+不要使用 mutable 对象作为函数的默认参数！！！
+不要使用 mutable 对象作为函数的默认参数！！！
+
+《fluent python》 8.4 小节中有对这个默认参数的讲述，很精彩，不再赘述
+
+我踩到这个坑主要是因为 leetcode 133 号问题，我采用了如下代码：
+```python
+"""
+# Definition for a Node.
+class Node:
+    def __init__(self, val = 0, neighbors = []):
+        self.val = val
+        self.neighbors = neighbors
+"""
+class Solution:
+    def _dfs(self, cnode, do_something,  visited=set(), **kwargs):
+        print(visited)
+        if cnode in visited:
+            return
+        else:
+            do_something(cnode, **kwargs)
+            visited.add(cnode)
+            for inode in cnode.neighbors:
+                self._dfs(inode, do_something, visited, **kwargs)
+
+
+    def cloneGraph(self, node: 'Node') -> 'Node':
+        if not node:
+            return None
+
+
+        xnode_to_ynode = {}
+        def fillmap(cnode, xymap):
+            xymap[cnode] = Node(cnode.val)
+        self._dfs(node, fillmap, xymap=xnode_to_ynode)
+
+        print("next\n\n\n")
+        def fillneighs(cnode, xymap):
+            for i in cnode.neighbors:
+                xymap[cnode].neighbors.append(xymap[i])
+        self._dfs(node, fillneighs, xymap=xnode_to_ynode)
+
+        return xnode_to_ynode[node]
+```
 
 ## 1.3. Python 2.7 vs. Python 3.7
 

@@ -84,11 +84,11 @@ def do_something(val, visited=set()):
     return visited
 
 
-a = do_something(1)
+a = do_something(1) 
 b = do_something(2)
-b = do_something() # b: {1}
+a is b # True
 ```
-对比如下代码
+以为使用默认参数，调用 do_something 会每次创建一个 新的 set 对象，其实并没有！！！！
 
 ## 1.3. Python 2.7 vs. Python 3.7
 

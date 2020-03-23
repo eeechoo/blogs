@@ -13,6 +13,9 @@ var_positional | 可变参数 | def foo(*args) | foo(1, 2, 3)<br>templist = [1, 
 keyword_only | 关键字参数 | def foo(\*, a)<br>def foo(\*, a=1) | foo(a=2) 此处必须使用 **a=**，不可缺省 **a=**
 var_keyword | 命名关键字参数 | def foo(\**kwargs) | foo(a=2, b=3, c=4)
 
+## new in python3.8
+Positional-only parameters
+
 ## 1.1. 练习
 
 * 所有参数都存在的例子

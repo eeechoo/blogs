@@ -15,6 +15,7 @@ var_keyword | 命名关键字参数 | def foo(\**kwargs) | foo(a=2, b=3, c=4)
 
 ## new in python3.8
 Positional-only parameters
+https://docs.python.org/3/whatsnew/3.8.html#positional-only-parameters
 
 ## 1.1. 练习
 

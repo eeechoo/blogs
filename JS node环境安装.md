@@ -5,7 +5,7 @@
        编译过 python 源码的表示这种方式实在是太方便了 爱了爱了
        （因为JS天生残疾而对其一直抵制的我表示真香）
      2. ```vim /etc/profile```  
-        添加 ```export PATH=$PATH:/home/node-v12.16.1-linux-x64/bin```
+        添加 ```export PATH=$PATH:/home/node-v12.16.1-linux-x64/bin```  
         ```source /etc/profile```
      
    - source code

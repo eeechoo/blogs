@@ -19,7 +19,7 @@
 2. 关于 python 异步编程个人见解  
     csapp 中说过，concurrency 编程分为三类：多进程、单进程多线程、单进程 单线程 IO 复用
 
-    IO 多路复用典型的写法就是 selector.register(event, callback_function)，这种被称为 callback_based 写法，  
+    IO 多路复用典型的写法就是 selector.register(fileno, event, callback_function)，这种被称为 callback_based 写法，  
 
     这样的写法存在的问题就是 callback hell 问题，于是大家开动了 聪明的大脑 为解决这个问题造成了各种 syntax sugar，例如：
     - JavaScript 中的 promise 使 <callback 中的嵌套调用> ---进化为--->  <链式调用写法>

@@ -1,5 +1,5 @@
 1. David Beazley  
-   1. who is him
+   1. who is he
       - python core developor
       - 我喜欢他讲东西的方式：you can never know it until you make it by yourself & 造轮子的快乐the joy of reinvention
       - 年龄挺大的，国内这个年龄的 computer scientist 太少了

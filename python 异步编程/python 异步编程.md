@@ -1,9 +1,9 @@
 1. David Beazley  
-   0. who is him
+   1. who is him
       - python core developor
       - 我喜欢他讲东西的方式：you can never know it until you make it by yourself & 造轮子的快乐the joy of reinvention
       - 年龄挺大的，国内这个年龄的 computer scientist 太少了
-   1. Build Your Own Async 2019
+   2. Build Your Own Async 2019
       - video  
         \<Build Your Own Async> youtube
       - code  
@@ -11,7 +11,7 @@
       - I also achive the code into \<Build Your Own Async> derectory
       - 相当于 根据 python 的提供的async、await语法，自己造个类似 asyncio 的库来用
     
-   2. 
+   3. 
       - Generator Tricks for Systems Programmers (v1.0). Presented at PyCon 2008 (Chicago).
       - A Curious Course on Coroutines and Concurrency. Presented at PyCon 2009 (Chicago).
       - Generators: The Final Frontier. Presented at PyCon 2014 (Montreal).

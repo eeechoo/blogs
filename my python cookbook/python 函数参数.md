@@ -76,6 +76,20 @@ foo(a=1, b=2, c=3, d=4)
 ```
 关键字参数调用时必须指定参数名，在上面的例子中就是必须使用 `a=1, b=2`，参数名不可缺省。
 
+* 定义正确，调用失败的例子
+```python
+def foo(a, b=1, *args):
+    print(a, b, args)
+
+
+foo(1, 2, 3, 4, 5) #调用正确
+foo(b=2, a=1) #调用正确
+foo(b=2, a=1, 3, 4, 5) #调用失败
+foo(1, b=2, 3, 4, 5) #调用失败
+#SyntaxError: positional argument follows keyword argument
+
+```
+
 ## 1.2. 参考资料
 廖雪峰 Python 函数篇  
 Fluent Python 函数篇

@@ -87,6 +87,7 @@ foo(b=2, a=1) #调用正确
 foo(b=2, a=1, 3, 4, 5) #调用失败
 foo(1, b=2, 3, 4, 5) #调用失败
 #SyntaxError: positional argument follows keyword argument
+# 要就是 为什么有这种语法，需要看Python的 EBNF Grammar，先挖个坑吧，以后有能力了仔细研究下
 
 ```
 

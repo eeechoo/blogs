@@ -186,8 +186,141 @@ listening on lo0, link-type NULL (BSD loopback), capture size 262144 bytes
 23:15:44.641261 IP 192.168.1.8.55533 > 192.168.1.8.58748: Flags [S.], seq 3403812509, ack 2331897420, win 65535, options [mss 16344,nop,wscale 6,nop,nop,TS val 261991443 ecr 261991443,sackOK,eol], length 0
 23:15:44.641270 IP 192.168.1.8.58748 > 192.168.1.8.55533: Flags [.], ack 1, win 6379, options [nop,nop,TS val 261991443 ecr 261991443], length 0
 23:15:44.641279 IP 192.168.1.8.55533 > 192.168.1.8.58748: Flags [.], ack 1, win 6379, options [nop,nop,TS val 261991443 ecr 261991443], length 0
-23:15:44.644808 IP 192.168.1.8.58748 > 192.168.1.8.55533: Flags [.], seq 1:16333, ack 1, win 6379, options [nop,nop,TS val 261991446 ecr 261991443], length 16332
-23:15:44.644812 IP 192.168.1.8.58748 > 192.168.1.8.55533: Flags [P.], seq 16333:22329, ack 1, win 6379, options [nop,nop,TS val 261991446 ecr 261991443], length 5996
+*第五行*23:15:44.644808 IP 192.168.1.8.58748 > 192.168.1.8.55533: Flags [.], seq 1:16333, ack 1, win 6379, options [nop,nop,TS val 261991446 ecr 261991443], length 16332
+*第六行*23:15:44.644812 IP 192.168.1.8.58748 > 192.168.1.8.55533: Flags [P.], seq 16333:22329, ack 1, win 6379, options [nop,nop,TS val 261991446 ecr 261991443], length 5996
 23:15:44.644835 IP 192.168.1.8.55533 > 192.168.1.8.58748: Flags [.], ack 22329, win 6030, options [nop,nop,TS val 261991446 ecr 261991446], length 0
 ```
+1. 第三行中，客户端发起连接请求，options参数中有一个mss 16344的参数，就表示连接建立后，客户端能接收的最大TCP报文大小，超过后就会被拆包分开传送；
+2. 前四行都是两端的连接过程；
+3. 第五行客户端口58748向服务端口55533传输了16332字节大小的数据包；
+4. 第六行客户端口58748向服务端口55533传输了5996字节大小的数据包；
 
+从抓包过程就能看出，客户端发送一个字符串，被拆成了两个TCP数据报进行传输。
+
+## 解决方案
+对于粘包的情况，要对粘在一起的包进行拆包。对于拆包的情况，要对被拆开的包进行粘包，即将一个被拆开的完整应用包再组合成一个完整包。比较通用的做法就是每次发送一个应用数据包前在前面加上四个字节的包长度值，指明这个应用包的真实长度。如下图就是应用数据包格式。
+![](./解决方案示意图.jpg)
+
+下面我修改前文的代码示例，来实现解决拆包粘包问题，有两种实现方式： 1. 一种方式是引入netty库，netty封装了多种拆包粘包的方式，只需要对接口熟悉并调用即可，减少自己处理数据协议的繁琐流程； 2. 自己写协议封装和解析流程，相当于实现了netty库拆粘包的简易版本，本篇文章是为了学习需要，就通过这个方式实现：
+1. 客户端。每次发送一个字符串前，都将字符串转为字节数组，在原数据字节数组前再加上一个四个字节的代表该数据的长度，然后将组合的字节数组发送出去；
+    ```java
+    public class SocketClient {
+
+        public static void main(String[] args) throws Exception {
+            // 要连接的服务端IP地址和端口
+            String host = "127.0.0.1";
+            int port = 55533;
+            // 与服务端建立连接
+            Socket socket = new Socket(host, port);
+            // 建立连接后获得输出流
+            OutputStream outputStream = socket.getOutputStream();
+            String message = "这是一个整包!!!";
+            byte[] contentBytes = message.getBytes("UTF-8");
+            System.out.println("contentBytes.length = " + contentBytes.length);
+            int length = contentBytes.length;
+            byte[] lengthBytes = Utils.int2Bytes(length);
+            byte[] resultBytes = new byte[4 + length];
+            // void arraycopy(Object src,  int  srcPos, Object dest, int destPos,int length)
+            System.arraycopy(lengthBytes, 0, resultBytes, 0, lengthBytes.length);
+            System.arraycopy(contentBytes, 0, resultBytes, 4, contentBytes.length);
+
+            for (int i = 0; i < 10; i++) {
+                outputStream.write(resultBytes);
+            }
+            Thread.sleep(20000);
+            outputStream.close();
+            socket.close();
+        }
+    }
+    public final class Utils {
+        //int数值转为字节数组
+        public static byte[] int2Bytes(int i) {
+            byte[] result = new byte[4];
+            result[0] = (byte) (i >> 24 & 0xFF);
+            result[1] = (byte) (i >> 16 & 0xFF);
+            result[2] = (byte) (i >> 8 & 0xFF);
+            result[3] = (byte) (i & 0xFF);
+            return result;
+        }
+        //字节数组转为int数值
+        public static int bytes2Int(byte[] bytes){
+            int num = bytes[3] & 0xFF;
+            num |= ((bytes[2] << 8) & 0xFF00);
+            num |= ((bytes[1] << 16) & 0xFF0000);
+            num |= ((bytes[0] << 24)  & 0xFF000000);
+            return num;
+        }
+    }
+    ```
+
+2. 服务端。接收到客户端发送过来的字节数组后，先提取前面四个字节转为int值，然后再往后取该int数值长度的字节数，再转为字符串就是客户端端发送过来的数据，详见代码：
+    ```java
+    public class SocketServer {
+        public static void main(String[] args) throws Exception {
+            // 监听指定的端口
+            int port = 55533;
+            ServerSocket server = new ServerSocket(port);
+            // server将一直等待连接的到来
+            System.out.println("server将一直等待连接的到来");
+            Socket socket = server.accept();
+            // 建立好连接后，从socket中获取输入流，并建立缓冲区进行读取
+            InputStream inputStream = socket.getInputStream();
+            byte[] bytes = new byte[1024 * 128];
+            int len;
+            byte[] totalBytes = new byte[]{};
+            int totalLength = 0;
+            while ((len = inputStream.read(bytes)) != -1) {
+                //1. 将读取的数据和上一次遗留的数据拼起来
+                    // totalBytes 和 totalLength 存储着上次遗留的数据
+                    // 使用 tempBytes 和 tempLength 指向上次遗留的数据
+                    // bytes 和 len 指向本次接收到的数据
+                int tempLength = totalLength;
+                byte[] tempBytes = totalBytes;
+
+                // 将 tempBytes 数据 和 bytes 数据拼接，形成本次数据，使用 totalBytes 指向
+                totalLength = len + tempLength;
+                totalBytes = new byte[totalLength];
+                System.arraycopy(tempBytes, 0, totalBytes, 0, tempLength);
+                System.arraycopy(bytes, 0, totalBytes, tempLength, len);
+                while (totalLength > 4) {
+                    byte[] lengthBytes = new byte[4];
+                    System.arraycopy(totalBytes, 0, lengthBytes, 0, lengthBytes.length);
+                    int contentLength = Utils.bytes2Int(lengthBytes);
+                    //2. 如果剩下数据小于数据头标的长度，则出现拆包，再次获取数据连接
+                    if (totalLength < contentLength + 4) {
+                        break;
+                    }
+                    //3. 将数据头标的指定长度的数据取出则为应用数据
+                    byte[] contentBytes = new byte[contentLength];
+                    System.arraycopy(totalBytes, 4, contentBytes, 0, contentLength);
+                    //注意指定编码格式，发送方和接收方一定要统一，建议使用UTF-8
+                    String content = new String(contentBytes, "UTF-8");
+                    System.out.println("contentLength = " + contentLength + ", content: " + content);
+                    //4. 去掉已读取的数据
+                    totalLength -= (4 + contentLength);
+                    byte[] leftBytes = new byte[totalLength];
+                    System.arraycopy(totalBytes, 4 + contentLength, leftBytes, 0, totalLength);
+                    totalBytes = leftBytes;
+                }
+            }
+            inputStream.close();
+            socket.close();
+            server.close();
+        }
+    }
+    ```
+3. 打印结果：
+    ```CONSOLE
+    server将一直等待连接的到来
+    contentLength = 21, content: 这是一个整包!!!
+    contentLength = 21, content: 这是一个整包!!!
+    contentLength = 21, content: 这是一个整包!!!
+    contentLength = 21, content: 这是一个整包!!!
+    contentLength = 21, content: 这是一个整包!!!
+    contentLength = 21, content: 这是一个整包!!!
+    contentLength = 21, content: 这是一个整包!!!
+    contentLength = 21, content: 这是一个整包!!!
+    contentLength = 21, content: 这是一个整包!!!
+    contentLength = 21, content: 这是一个整包!!!
+    ```
+客户端连续发送十个字符串，服务端也收到了分开的十个字符串，不再出现多个数据包连在一起的情况了。

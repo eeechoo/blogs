@@ -1,9 +1,9 @@
 https://wiki.biligame.com/pcr/
 
+landesuoer图书馆
+https://pcredivewiki.tw/
 
-# 游戏本身优缺点
-1. 优点
-    - 制作精良
-    - 
+https://pcrdfans.com/
 
-2. 缺点
+
+https://bbs.nga.cn/read.php?tid=21301844

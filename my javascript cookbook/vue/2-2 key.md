@@ -1,14 +1,5 @@
-# 2-6 组件化开发
-https://vuejs.org/v2/guide/index.html#Composing-with-Components
-
-类比两个思想：
-- 函数思想：
-    - 定义函数，函数有参数，组件有 props  
-    - 使用函数，函数需要传参，所以存在 v-bind
-- Custom Elements 思想
-
-# 2-7
 v-bind:key 出现的场景
+
 ```html
     <div id="app">
         <div>

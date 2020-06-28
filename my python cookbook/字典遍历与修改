@@ -1,0 +1,48 @@
+# 字典遍历与修改
+## 问题的产生
+去掉偶数对，保留奇数对，我经常会写出如下代码
+```python
+changing_dict = {}
+
+for i in range(10000):
+    changing_dict[i] = i
+
+for k, v in changing_dict.items():
+    if k % 2 == 0 and v % 2 == 0:
+    del changing_dict[k]
+    
+结果显示如下：
+RuntimeError: dictionary changed size during iteration
+```
+## anthor problem
+既然遍历字典的时候不能修改字典的大小，  
+那么同样的规则是否也适用于 list 列表呢？
+```python
+这段代码就不行
+changing_list = [i for i in range(10000)]
+
+for index, num in enumerate(changing_list):
+    if index % 2 == 0:
+        del changing_list[index]
+
+print(len(changing_list))
+```
+```python
+这段代码却可以
+changing_list = [i for i in range(10000)]
+
+for num in changing_list:
+    if num % 2 == 0:
+        changing_list.remove(num)
+
+print(changing_list)
+print(len(changing_list))
+
+```
+
+## 结论
+边遍历边修改 是一种 危险 的行为 😢  
+那么应该怎么做呢，那就是新建一个数据结构用来存储过滤后的结果
+
+## 更多参考
+https://www.zhihu.com/question/49098374

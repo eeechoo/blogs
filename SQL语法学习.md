@@ -77,6 +77,18 @@ insert into people (name, dep, age) values ("Laura", 2, 39);
     2. 如果多一条记录 `insert into people (name, dep, age) values ("Laura", 2, 39);` 发现使用该方法 dep 2 中年龄最大的人还是一个，而非两个
 
 - 方案二
+    ```sql
+    select * from people as a left join people as b on a.dep=b.dep and a.age < b.age;
+    然后
+    select * from people as a left join people as b on a.dep=b.dep and a.age < b.age where b.age is null;
+    然后
+    select name, dep, age
+    from (select a.*  from people as a left join people as b on a.dep=b.dep and a.age < b.age where b.age is null) as temp;
+    ```
+    
+    点评：
+    1. 该方案巧妙的的使用了 left join，但是显然将复杂度升高了，变为了 `n**2` 的复杂度。
+    2. 该方案有效的暴露了 dep 2 中两名年龄最大的用户 Laura 和 Michael。
 
 
 ## 参考链接

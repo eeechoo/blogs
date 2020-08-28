@@ -63,14 +63,15 @@ insert into people (name, dep, age) values ("Laura", 2, 39);
 
 如何取出每个 department 中年龄最大的的用户
 - 方案一
-```
-select name, dep, age , row_number() over (partition by dep order by age desc )  as dep_rank from people
+    ```
+    select name, dep, age , row_number() over (partition by dep order by age desc )  as dep_rank from people
 
-然后
+    然后
 
-select name, dep, age from (select name, dep, age , row_number() over (partition by dep order by age desc )  as dep_rank from people) as temp where temp.dep_rank=1
+    select name, dep, age from (select name, dep, age , row_number() over (partition by dep order by age desc )  as dep_rank from people) as temp where temp.dep_rank=1
 
-```
+    ```
+
     点评：
     1. 该方案使用了 window function
     2. 如果多一条记录 `insert into people (name, dep, age) values ("Laura", 2, 39);` 发现使用该方法 dep 2 中年龄最大的人还是一个，而非两个

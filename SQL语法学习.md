@@ -76,3 +76,7 @@ select name, dep, age from (select name, dep, age , row_number() over (partition
 - 方案二
 
 
+## 参考链接
+stackoverflow: https://stackoverflow.com/questions/12102200/get-records-with-max-value-for-each-group-of-grouped-sql-results
+
+

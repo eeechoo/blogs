@@ -114,6 +114,16 @@ insert into people (name, dep, age) values ("Laura", 2, 39);
     
     点评：
     1. 使用 left join 会报错，使用 join 并不会，然而自己弄不懂为什么，看来对于 mysql 的语法学习还是要多练习，多思考呀。
+    ```
+    原因是 join on 语法，而不要使用 join where 语法  
+    改成 join on 语法 比较 left join 和 join 你就会明白原因了
+    
+    select *
+    from people
+             left join (select dep, max(age) from people group by dep) as temp
+    on people.dep = temp.dep
+      and people.age = temp.`max(age)`
+    ```
     
 ## 参考链接
 - stackoverflow:   

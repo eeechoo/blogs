@@ -88,9 +88,33 @@ insert into people (name, dep, age) values ("Laura", 2, 39);
     
     点评：
     1. 该方案巧妙的的使用了 left join，但是显然将复杂度升高了，变为了 `n**2` 的复杂度。
-    2. 该方案有效的暴露了 dep 2 中两名年龄最大的用户 Laura 和 Michael。
+    2. 该方案有效的保留了 dep 2 中两名年龄最大的用户 Laura 和 Michael。
 
+- 方案三
+    ```sql
+    select max(age) from people group by dep;
+    然后
+    select *
+    from people as a where a.age=(select  max(age) from people  as b  where a.dep=b.dep group by dep);
+    ```
+    
+    点评：
+    1. 非常精妙的一种写法，目前我还不懂这个 sql 语句 的执行流程，等将来学的更加深入了好好分析下这种写法。
+    2. 同样保留了 dep 2 中两个年龄最大的数据。
+    
+- 方案三（another version）
+    ```sql
+    select dep, max(age) from people group by dep;
 
+    select name, people.dep, age
+    from people   join  (select dep, max(age) from people group by dep) as temp
+    where people.dep = temp.dep
+    and people.age = temp.`max(age)`
+    ```
+    
+    点评：
+    1. 使用 left join 会报错，使用 join 并不会，然而自己弄不懂为什么，看来对于 mysql 的语法学习还是要多练习，多思考呀。
+    
 ## 参考链接
 - stackoverflow:   
 https://stackoverflow.com/questions/12102200/get-records-with-max-value-for-each-group-of-grouped-sql-results

@@ -124,7 +124,19 @@ insert into people (name, dep, age) values ("Laura", 2, 39);
              left join (select dep, max(age) from people group by dep) as temp
     on people.dep = temp.dep
       and people.age = temp.`max(age)`
+    
+
+    感觉自己找到了原因根本原因是
+    select * from people join (select * from people) as temp; 这句话能够运行成功
+    select * from people left join (select * from people) as temp; 这句话运行失败
+
+    so why？绕了一圈又回到了 mysql 语法解析器上，看来要真正学会 mysql 语法，必须要对 mysql 语法解析器 有一定了解了。
+
+
     ```
+
+- 方案四
+  
     
 ## 参考链接
 - stackoverflow:   

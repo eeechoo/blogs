@@ -16,7 +16,7 @@ bilibili有30多个分区，取出每个分区中前三名的up主
 
 1. 数据如下  
 
-| Person | Group | Age |  
+| name | dep | age |  
 | ---    | ---   |--- |
 | Bob  | 1     | 32  |
 | Jill | 1     | 34  |
@@ -25,9 +25,32 @@ bilibili有30多个分区，取出每个分区中前三名的up主
 | Paul | 2     | 36  |
 | Laura| 2     | 39  |
 
+dep 是 department 的缩写
 2. 以 mysql 最新版数据库作为测试数据库
-
+```bash
+mysql> select version();
++-----------+
+| version() |
++-----------+
+| 8.0.21    |
++-----------+
+1 row in set (0.00 sec)
+```
 3. 相关 DDL 和 DML 语句
 ```sql
-insert
+mysql> create database my_test;
+Query OK, 1 row affected (0.01 sec)
+
+mysql> use my_test;
+Database changed
+
+mysql> create table people
+    -> (
+    ->     id   int
+    ->         primary key,
+    ->     name varchar(50),
+    ->     dep  int,
+    ->     age  int
+    -> );
+Query OK, 0 rows affected (0.02 sec)
 ```

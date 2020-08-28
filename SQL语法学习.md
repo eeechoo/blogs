@@ -16,13 +16,13 @@ bilibili有30多个分区，取出每个分区中前三名的up主
 
 1. 数据如下  
 
-Person | Group | Age
----|---|---|---
-Bob  | 1     | 32  
-Jill | 1     | 34  
-Shawn| 1     | 42  
-Jake | 2     | 29  
-Paul | 2     | 36  
-Laura| 2     | 39  
+| Person | Group | Age |  
+| ---    | ---   |--- |
+| Bob  | 1     | 32  |
+| Jill | 1     | 34  |
+| Shawn| 1     | 42  |
+| Jake | 2     | 29  |
+| Paul | 2     | 36  |
+| Laura| 2     | 39  |
 
 2. 

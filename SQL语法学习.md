@@ -62,4 +62,17 @@ insert into people (name, dep, age) values ("Laura", 2, 39);
 4. 终于来到了最激动人心的时刻，可以解决我们提出来的问题了
 
 如何取出每个 department 中年龄最大的的用户
+- 方案一
+```
+select name, dep, age , row_number() over (partition by dep order by age desc )  as dep_rank from people
+
+然后
+
+select name, dep, age from (select name, dep, age , row_number() over (partition by dep order by age desc )  as dep_rank from people) as temp where temp.dep_rank=1
+
+```
+点评：该方案使用了 window function
+
+- 方案二
+
 

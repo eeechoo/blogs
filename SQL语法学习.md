@@ -26,6 +26,7 @@ bilibili有30多个分区，取出每个分区中前三名的up主
 | Laura| 2     | 39  |
 
 dep 是 department 的缩写
+
 2. 以 mysql 最新版数据库作为测试数据库
 ```bash
 mysql> select version();
@@ -60,7 +61,5 @@ insert into people (name, dep, age) values ("Laura", 2, 39);
 
 4. 终于来到了最激动人心的时刻，可以解决我们提出来的问题了
 
-如何取出每个 department 中年龄最大
-的
-的用户
+如何取出每个 department 中年龄最大的的用户
 

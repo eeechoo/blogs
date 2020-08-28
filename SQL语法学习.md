@@ -116,6 +116,7 @@ insert into people (name, dep, age) values ("Laura", 2, 39);
     1. 使用 left join 会报错，使用 join 并不会，然而自己弄不懂为什么，看来对于 mysql 的语法学习还是要多练习，多思考呀。
     ```
     原因是 join on 语法，而不要使用 join where 语法  
+    难道是存在 join where 这种写法，但是没有 left join where 这种写法？
     改成 join on 语法 比较 left join 和 join 你就会明白原因了
     
     select *

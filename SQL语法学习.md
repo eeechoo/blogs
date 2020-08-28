@@ -38,19 +38,29 @@ mysql> select version();
 ```
 3. 相关 DDL 和 DML 语句
 ```sql
-mysql> create database my_test;
-Query OK, 1 row affected (0.01 sec)
+create database my_test;
 
-mysql> use my_test;
-Database changed
+use my_test;
 
-mysql> create table people
-    -> (
-    ->     id   int
-    ->         primary key,
-    ->     name varchar(50),
-    ->     dep  int,
-    ->     age  int
-    -> );
-Query OK, 0 rows affected (0.02 sec)
+create table people
+(
+    id   int primary key auto_increment,
+    name varchar(50),
+    dep  int,
+    age  int
+);
+
+insert into people (name, dep, age) values ("Bob", 1, 32);
+insert into people (name, dep, age) values ("Jill", 1, 34);
+insert into people (name, dep, age) values ("Shawn", 1, 42);
+insert into people (name, dep, age) values ("Jake", 2, 29);
+insert into people (name, dep, age) values ("Paul", 2, 36);
+insert into people (name, dep, age) values ("Laura", 2, 39);
 ```
+
+4. 终于来到了最激动人心的时刻，可以解决我们提出来的问题了
+
+如何取出每个 department 中年龄最大
+的
+的用户
+

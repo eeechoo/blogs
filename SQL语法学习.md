@@ -25,4 +25,9 @@ bilibili有30多个分区，取出每个分区中前三名的up主
 | Paul | 2     | 36  |
 | Laura| 2     | 39  |
 
-2. 
+2. 以 mysql 最新版数据库作为测试数据库
+
+3. 相关 DDL 和 DML 语句
+```sql
+insert
+```

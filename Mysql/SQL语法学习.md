@@ -150,7 +150,55 @@ insert into people (name, dep, age) values ("Laura", 2, 39);
     where RN = 1
    ``` 
 
+- 方案五
+    类似方案一，只不过采用了 User-Defined Variable
+    ```sql
+    select *
+    from (
+            select @rn := case when dep != @prev_dep THEN 1 ELSE @rn + 1 End as rn,
+                    @prev_dep := dep,
+                    name,
+                    age,
+                    dep
+            from people,
+                (select @rn := 0) as r
 
+            order by dep, age desc, name) as temp
+    where rn = 1;
+
+
+
+    ```
+    解释如下：
+    ```sql
+    1. select * from people, (select @rn := 0) as r    形成 两张表的join
+    2. @prev_dep 没有初始化，直接拿来使用了，所以 prev_dep 初始值为 NULL
+
+    接着对每一行数据进行如下操作
+
+    3. @rn := case when dep != @prev_dep THEN 1 ELSE @rn + 1 End    这是个三元表达式
+    4. @prev_dep := dep
+
+    生成一张表，对最后的结果使用 filter 过滤
+
+    5. where rn=1
+
+
+    ```
+    
+    更多思考：
+    ```
+    请问下面的语句能不能实现 同样的功能？
+    select @rn := case when dep != @prev_dep THEN 1 ELSE @rn + 1 End as rn,
+       @prev_dep := dep,
+       name,
+       age,
+       dep
+    from people,
+        (select @rn := 0) as r
+    having rn=1
+    order by dep, age desc, name
+    ```
     
 ## 参考链接
 - stackoverflow:   

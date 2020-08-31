@@ -136,7 +136,21 @@ insert into people (name, dep, age) values ("Laura", 2, 39);
     ```
 
 - 方案四
-  
+    类似 方案一，只不过采用了 CTE 方式
+   ```sql
+    with row_number_table as
+         (select name,
+                 dep,
+                 age,
+                 row_number() over (partition by dep
+                     order by age desc) as RN
+          from people)
+    select name, age
+    from row_number_table
+    where RN = 1
+   ``` 
+
+
     
 ## 参考链接
 - stackoverflow:   

@@ -34,3 +34,9 @@ a = "123" * 100
 b = "123" * 100
 a is b     #False
 ```
+
+# split 小细节
+```python
+'ab'.split('b') == ['a', '']
+```
+
